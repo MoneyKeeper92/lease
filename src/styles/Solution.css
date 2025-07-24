@@ -58,15 +58,47 @@
   }
   
   .calculations-container {
-    margin-top: 0.75rem;
-    font-size: 0.875rem;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
   }
   
   .calculations-heading {
     font-weight: bold;
+    margin-bottom: 0.75rem;
+    color: #2d3748;
+    font-size: 1.1rem;
+  }
+  
+  .calculation-section {
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px dotted #e2e8f0;
+  }
+  
+  .calculation-section:last-child {
+    border-bottom: none;
+  }
+  
+  .calculation-title {
+    font-weight: bold;
     margin-bottom: 0.25rem;
+    color: #4a5568;
+  }
+  
+  .calculation-explanation {
+    margin-bottom: 0.25rem;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+  
+  .calculation-details {
+    padding-left: 0.5rem;
   }
   
   .calculation-item {
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
   }

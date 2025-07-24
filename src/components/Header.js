@@ -29,7 +29,7 @@ const Header = ({
           <div className="progress-text">
             Progress: {completedCount}/{totalScenariosInApp} Scenarios
           </div>
-          <div 
+          <div
             className="progress-container"
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
@@ -37,7 +37,7 @@ const Header = ({
             {/* Milestone markers */}
             <div className="milestone-markers">
               {milestones.map(milestone => (
-                <div 
+                <div
                   key={milestone}
                   className="milestone-marker"
                   style={{ left: `${milestone}%` }}
@@ -49,7 +49,7 @@ const Header = ({
 
             {/* Progress bar */}
             <div className="progress-bar">
-              <div 
+              <div
                 className={`progress-fill`}
                 style={{ width: `${masteryPercentage}%` }}
               />
@@ -71,7 +71,7 @@ const Header = ({
           <div className="mastery-level">
             Mastery: {formatPercentage(masteryLevel)}
           </div>
-          <button 
+          <button
             className="reset-button"
             onClick={resetProgress}
           >

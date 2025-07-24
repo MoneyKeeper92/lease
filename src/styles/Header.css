@@ -41,8 +41,11 @@
 }
 
 .progress-info {
-  flex: 1;
-  margin: 0 0.5rem;
+  display: flex;
+  flex-direction: column; /* Stack progress text and bar */
+  align-items: flex-start;
+  flex-grow: 1; /* Allow it to take available space */
+  margin: 0 1.5rem;
 }
 
 .progress-text {
@@ -56,6 +59,7 @@
 .progress-container {
   position: relative;
   padding: 0.25rem 0 0.75rem;
+  width: 100%;
 }
 
 /* Progress Bar */

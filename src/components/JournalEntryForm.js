@@ -1,5 +1,5 @@
 // src/components/JournalEntryForm.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import JournalTable from './JournalTable';
 import { formatCurrency } from '../utils/formatUtils';
 import '../styles/JournalEntry.css';
@@ -10,7 +10,9 @@ const JournalEntryForm = ({
   toggleSolution, 
   showSolution,
   isCorrect,
-  onAdvance
+  onAdvance,
+  onPrevious,
+  isFirstScenario
 }) => {
   // Initialize with the exact number of lines needed based on solution
   const [journalLines, setJournalLines] = useState(() => {
@@ -24,6 +26,7 @@ const JournalEntryForm = ({
   const [errorMessage, setErrorMessage] = useState('');
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [lastScenarioId, setLastScenarioId] = useState(scenario.id);
+  const successDialogRef = useRef(null);
 
   // Reset form only when scenario changes
   useEffect(() => {
@@ -40,15 +43,16 @@ const JournalEntryForm = ({
     }
   }, [scenario.id, scenario.solution, onCheck, lastScenarioId]);
 
+  // Scroll to success dialog when it appears
   useEffect(() => {
-    if (showSuccessDialog) {
+    if (showSuccessDialog && successDialogRef.current) {
+      // Use a small timeout to ensure the element is rendered before scrolling
       const timer = setTimeout(() => {
-        setShowSuccessDialog(false);
-        onAdvance();
-      }, 1500);
+        successDialogRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
       return () => clearTimeout(timer);
     }
-  }, [showSuccessDialog, onAdvance]);
+  }, [showSuccessDialog]);
 
   const checkAgainstSolution = (userEntries, solution) => {
     console.log("Running checkAgainstSolution");
@@ -170,6 +174,11 @@ const JournalEntryForm = ({
     }
   };
 
+  const handleNext = () => {
+    setShowSuccessDialog(false);
+    onAdvance();
+  };
+
   return (
     <div className="journal-form-container">
       <h2 className="journal-heading">
@@ -198,13 +207,21 @@ const JournalEntryForm = ({
         >
           {showSolution ? 'Hide Solution' : 'Show Solution'}
         </button>
+      </div>
 
+      <div className="navigation-controls">
         <button
-          className="skip-button"
-          onClick={onAdvance}
-          type="button"
+          className="btn-secondary"
+          onClick={onPrevious}
+          disabled={isFirstScenario}
         >
-          Skip Question
+          Previous
+        </button>
+        <button
+          className="btn-primary"
+          onClick={onAdvance}
+        >
+          Next
         </button>
       </div>
       
@@ -215,8 +232,120 @@ const JournalEntryForm = ({
       )}
 
       {showSuccessDialog && (
-        <div className="success-dialog">
-          Correct! Moving to next question...
+        <div className="success-dialog" ref={successDialogRef}>
+          <div className="success-message">
+            {scenario.successMessage || 'Correct! Review the calculations below.'}
+          </div>
+          {scenario.keyCalculations && (
+            <div className="key-calculations">
+              <p className="calculations-heading">Key Calculations:</p>
+              
+              {scenario.leaseType === 'operating' ? (
+                <div className="calculation-details">
+                  {scenario.keyCalculations.interest !== undefined && (
+                    <div className="calculation-section">
+                      <p className="calculation-title">Interest:</p>
+                      <p className="calculation-explanation">
+                        {typeof scenario.keyCalculations.interest === 'string' ? 
+                          scenario.keyCalculations.interest : 
+                          `${formatCurrency(scenario.initialLeaseLiability)} × ${scenario.interestRate * 100}% = ${formatCurrency(scenario.keyCalculations.interest)}`}
+                      </p>
+                    </div>
+                  )}
+                  
+                  {scenario.keyCalculations.leaseExpense !== undefined && (
+                    <div className="calculation-section">
+                      <p className="calculation-title">Lease expense (single line item):</p>
+                      <p className="calculation-explanation">
+                        {typeof scenario.keyCalculations.leaseExpense === 'string' ? 
+                          scenario.keyCalculations.leaseExpense : 
+                          formatCurrency(scenario.keyCalculations.leaseExpense)}
+                      </p>
+                    </div>
+                  )}
+                  
+                  {scenario.keyCalculations.rouAssetAmortization !== undefined && (
+                    <div className="calculation-section">
+                      <p className="calculation-title">ROU Asset amortization:</p>
+                      <p className="calculation-explanation">
+                        {typeof scenario.keyCalculations.rouAssetAmortization === 'string' ? 
+                          scenario.keyCalculations.rouAssetAmortization : 
+                          formatCurrency(scenario.keyCalculations.rouAssetAmortization)}
+                      </p>
+                    </div>
+                  )}
+                  
+                  {scenario.keyCalculations.liabilityReduction !== undefined && (
+                    <div className="calculation-section">
+                      <p className="calculation-title">Liability reduction:</p>
+                      <p className="calculation-explanation">
+                        {typeof scenario.keyCalculations.liabilityReduction === 'string' ? 
+                          scenario.keyCalculations.liabilityReduction : 
+                          formatCurrency(scenario.keyCalculations.liabilityReduction)}
+                      </p>
+                    </div>
+                  )}
+                  
+                  {scenario.keyCalculations.journalLogic && (
+                    <div className="calculation-section">
+                      <p className="calculation-title">Journal Logic:</p>
+                      <p className="calculation-explanation">{scenario.keyCalculations.journalLogic}</p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="calculation-details">
+                  {scenario.keyCalculations.interestExpense !== undefined && (
+                    <div className="calculation-section">
+                      <p className="calculation-title">Interest expense:</p>
+                      <p className="calculation-explanation">
+                        {typeof scenario.keyCalculations.interestExpense === 'string' ? 
+                          scenario.keyCalculations.interestExpense : 
+                          `${formatCurrency(scenario.initialLeaseLiability)} × ${scenario.interestRate * 100}% = ${formatCurrency(scenario.keyCalculations.interestExpense)}`}
+                      </p>
+                    </div>
+                  )}
+                  
+                  {scenario.keyCalculations.principalReduction !== undefined && (
+                    <div className="calculation-section">
+                      <p className="calculation-title">Principal reduction:</p>
+                      <p className="calculation-explanation">
+                        {typeof scenario.keyCalculations.principalReduction === 'string' ? 
+                          scenario.keyCalculations.principalReduction : 
+                          formatCurrency(scenario.keyCalculations.principalReduction)}
+                      </p>
+                    </div>
+                  )}
+                  
+                  {scenario.keyCalculations.amortizationExpense !== undefined && (
+                    <div className="calculation-section">
+                      <p className="calculation-title">Amortization expense (ROU Asset):</p>
+                      <p className="calculation-explanation">
+                        {typeof scenario.keyCalculations.amortizationExpense === 'string' ? 
+                          scenario.keyCalculations.amortizationExpense : 
+                          formatCurrency(scenario.keyCalculations.amortizationExpense)}
+                      </p>
+                    </div>
+                  )}
+                  
+                  {scenario.keyCalculations.journalLogic && (
+                    <div className="calculation-section">
+                      <p className="calculation-title">Journal Logic:</p>
+                      <p className="calculation-explanation">{scenario.keyCalculations.journalLogic}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+          <div className="next-button-container">
+            <button 
+              className="next-button"
+              onClick={handleNext}
+            >
+              Continue to Next Question
+            </button>
+          </div>
         </div>
       )}
     </div>

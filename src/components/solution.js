@@ -46,37 +46,89 @@ const Solution = ({ scenario }) => {
       {scenario.keyCalculations && (
         <div className="calculations-container">
           <p className="calculations-heading">Key Calculations:</p>
+          
           {scenario.leaseType === 'operating' ? (
-            <>
+            <div className="calculation-details">
               {scenario.keyCalculations.interest !== undefined && (
-                <p className="calculation-item">
-                  Interest: {formatCurrency(scenario.initialLeaseLiability)} × {scenario.interestRate * 100}% = {formatCurrency(scenario.keyCalculations.interest)}
-                </p>
+                <div className="calculation-section">
+                  <p className="calculation-title">Interest:</p>
+                  <p className="calculation-explanation">
+                    {scenario.keyCalculations.interest ? scenario.keyCalculations.interest : 
+                     `${formatCurrency(scenario.initialLeaseLiability)} × ${scenario.interestRate * 100}% = ${formatCurrency(scenario.initialLeaseLiability * scenario.interestRate)}`}
+                  </p>
+                </div>
               )}
-              <p className="calculation-item">
-                Lease expense (single line item): {formatCurrency(scenario.keyCalculations.leaseExpense)}
-              </p>
-              <p className="calculation-item">
-                ROU Asset amortization: {formatCurrency(scenario.keyCalculations.rouAssetAmortization)}
-              </p>
-              <p className="calculation-item">
-                Liability reduction: {formatCurrency(scenario.keyCalculations.liabilityReduction)}
-              </p>
-            </>
+              
+              {scenario.keyCalculations.leaseExpense !== undefined && (
+                <div className="calculation-section">
+                  <p className="calculation-title">Lease expense (single line item):</p>
+                  <p className="calculation-explanation">
+                    {scenario.keyCalculations.leaseExpense || formatCurrency(scenario.keyCalculations.leaseExpense)}
+                  </p>
+                </div>
+              )}
+              
+              {scenario.keyCalculations.rouAssetAmortization !== undefined && (
+                <div className="calculation-section">
+                  <p className="calculation-title">ROU Asset amortization:</p>
+                  <p className="calculation-explanation">
+                    {scenario.keyCalculations.rouAssetAmortization || formatCurrency(scenario.keyCalculations.rouAssetAmortization)}
+                  </p>
+                </div>
+              )}
+              
+              {scenario.keyCalculations.liabilityReduction !== undefined && (
+                <div className="calculation-section">
+                  <p className="calculation-title">Liability reduction:</p>
+                  <p className="calculation-explanation">
+                    {scenario.keyCalculations.liabilityReduction || formatCurrency(scenario.keyCalculations.liabilityReduction)}
+                  </p>
+                </div>
+              )}
+              
+              {scenario.keyCalculations.journalLogic && (
+                <div className="calculation-section">
+                  <p className="calculation-title">Journal Logic:</p>
+                  <p className="calculation-explanation">{scenario.keyCalculations.journalLogic}</p>
+                </div>
+              )}
+            </div>
           ) : (
-            <>
+            <div className="calculation-details">
               {scenario.keyCalculations.interestExpense !== undefined && (
-                <p className="calculation-item">
-                  Interest expense: {formatCurrency(scenario.initialLeaseLiability)} × {scenario.interestRate * 100}% = {formatCurrency(scenario.keyCalculations.interestExpense)}
-                </p>
+                <div className="calculation-section">
+                  <p className="calculation-title">Interest expense:</p>
+                  <p className="calculation-explanation">
+                    {scenario.keyCalculations.interestExpense || `${formatCurrency(scenario.initialLeaseLiability)} × ${scenario.interestRate * 100}% = ${formatCurrency(scenario.keyCalculations.interestExpense)}`}
+                  </p>
+                </div>
               )}
-              <p className="calculation-item">
-                Principal reduction: {formatCurrency(scenario.keyCalculations.principalReduction)}
-              </p>
-              <p className="calculation-item">
-                Amortization expense (ROU Asset): {formatCurrency(scenario.keyCalculations.amortizationExpense)}
-              </p>
-            </>
+              
+              {scenario.keyCalculations.principalReduction !== undefined && (
+                <div className="calculation-section">
+                  <p className="calculation-title">Principal reduction:</p>
+                  <p className="calculation-explanation">
+                    {scenario.keyCalculations.principalReduction || formatCurrency(scenario.keyCalculations.principalReduction)}
+                  </p>
+                </div>
+              )}
+              
+              {scenario.keyCalculations.amortizationExpense !== undefined && (
+                <div className="calculation-section">
+                  <p className="calculation-title">Amortization expense (ROU Asset):</p>
+                  <p className="calculation-explanation">
+                    {scenario.keyCalculations.amortizationExpense || formatCurrency(scenario.keyCalculations.amortizationExpense)}
+                  </p>
+                </div>
+              )}
+              
+              {scenario.keyCalculations.journalLogic && (
+                <div className="calculation-section">
+                  <p className="calculation-title">Journal Logic:</p>
+                  <p className="calculation-explanation">{scenario.keyCalculations.journalLogic}</p>
+                </div>
+              )}
+            </div>
           )}
         </div>
       )}
