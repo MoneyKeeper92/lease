@@ -139,9 +139,6 @@ function App() {
     }
   };
 
-  // Calculate progress percentage
-  const progressPercentage = Math.round((Object.keys(completedScenarios).length / sortedScenarios.length) * 100);
-
   return (
     <div className="app-container">
       <h1 className="main-title">Lease Accounting Tool</h1>
